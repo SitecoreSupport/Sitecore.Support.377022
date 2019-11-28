@@ -21,7 +21,9 @@ namespace Sitecore.Support.Pipelines.Blocks
             Condition.Requires(context, "context").IsNotNull();
             Condition.Requires(entity, "entity").IsNotNull();
             CreateRelationshipDefinitionArgument arg2 = new CreateRelationshipDefinitionArgument(entity.Name, string.IsNullOrWhiteSpace(entity.DisplayName) ? entity.Name : entity.DisplayName, string.IsNullOrWhiteSpace(entity.RelationshipDescription) ? entity.Name : entity.RelationshipDescription, entity.SourceType, entity.TargetType, entity.RenderList);
-            await CreateRelationshipDefinitionPipeline.Run(arg2, context).ConfigureAwait(continueOnCapturedContext: false);
+
+            // Pass new instance of pipeline context to CreateRelationshipDefinitionPipeline so if it aborts the import continues
+            await CreateRelationshipDefinitionPipeline.Run(arg2, context.CommerceContext.GetPipelineContext()).ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }
